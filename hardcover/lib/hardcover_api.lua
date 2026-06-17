@@ -555,7 +555,7 @@ function HardcoverApi:createRead(user_book_id, edition_id, page, started_at)
   ]]
 
   local result = self:query(query, { id = user_book_id, pages = page, editionId = edition_id, startedAt = started_at })
-  if result and result.update_user_book_read then
+  if result and result.insert_user_book_read then
     local user_book_read = result.insert_user_book_read.user_book_read
     return self:normalizeUserBookRead(user_book_read)
   end
