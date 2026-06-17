@@ -614,7 +614,6 @@ function HardcoverApi:updateUserBook(book_id, status_id, privacy_setting_id, edi
   local update_args = {
     book_id = book_id,
     privacy_setting_id = privacy_setting_id,
-    status_id = status_id,
     edition_id = edition_id
   }
 
