@@ -600,26 +600,51 @@ function HardcoverApi:updateUserBook(book_id, status_id, privacy_setting_id, edi
     privacy_setting_id = me.account_privacy_setting_id or 1
   end
 
-  local query = [[
-    mutation ($object: UserBookCreateInput!) {
-      insert_user_book(object: $object) {
-        error
-        user_book {
-          ...UserBookParts
+  local user_book = self:findUserBook(book_id, nil)
+
+  if user_book and user_book.id then
+    local query = [[
+      mutation ($id: Int!, $object: UserBookUpdateInput!) {
+        update_user_book(id: $id, object: $object) {
+          error
+          user_book {
+            ...UserBookParts
+          }
         }
       }
+    ]] .. user_book_fragment
+
+    local update_args = {
+      privacy_setting_id = privacy_setting_id,
+      edition_id = edition_id
     }
-  ]] .. user_book_fragment
 
-  local update_args = {
-    book_id = book_id,
-    privacy_setting_id = privacy_setting_id,
-    edition_id = edition_id
-  }
+    local result = self:query(query, { id = user_book.id, object = update_args })
+    if result and result.update_user_book then
+      return result.update_user_book.user_book
+    end
+  else
+    local query = [[
+      mutation ($object: UserBookCreateInput!) {
+        insert_user_book(object: $object) {
+          error
+          user_book {
+            ...UserBookParts
+          }
+        }
+      }
+    ]] .. user_book_fragment
 
-  local result = self:query(query, { object = update_args })
-  if result and result.insert_user_book then
-    return result.insert_user_book.user_book
+    local update_args = {
+      book_id = book_id,
+      privacy_setting_id = privacy_setting_id,
+      edition_id = edition_id
+    }
+
+    local result = self:query(query, { object = update_args })
+    if result and result.insert_user_book then
+      return result.insert_user_book.user_book
+    end
   end
 end
 
