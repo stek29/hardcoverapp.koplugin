@@ -673,14 +673,14 @@ end
 function HardcoverApi:removeRead(user_book_id)
   local query = [[
     mutation($id: Int!) {
-      delete_user_book(id: $id) {
+      delete_user_book_read(id: $id) {
         id
       }
     }
   ]]
   local result = self:query(query, { id = user_book_id })
   if result then
-    return result.delete_user_book
+    return result.delete_user_book_read
   end
 end
 
