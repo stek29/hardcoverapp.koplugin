@@ -377,7 +377,6 @@ function HardcoverApi:normalizedEdition(edition)
   end
   result.language = edition.language
   result.title = edition.title
-  result.reads = edition.reads
   result.pages = edition.pages
   result.filetype = result.edition_format or "Physical Book"
   result.users_count = edition.users_count
